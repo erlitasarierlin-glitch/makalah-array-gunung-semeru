@@ -1,6 +1,6 @@
-# Tugas HTML Dasar
+# Tugas Array Gunung Semeru.
 
-Tugas ini dibuat untuk memenuhi mata kuliah Pemrograman Web.
+Tugas ini dibuat untuk memenuhi mata kuliah Struktur Data dan Algoritma.
 
 ## Isi Tugas
 - Heading HTML
