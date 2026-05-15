@@ -1,0 +1,86 @@
+import java.util.Scanner;
+
+public class PendakianSemeru {
+    public static void main(String[] args) {
+        // 1 = hijau, 0 = merah X/jurang, 2 = Pos/boleh istirahat
+        // Baris 0 = atas, Kolom 0 = kiri
+        int[][] peta = {
+            {1, 0, 0, 0, 1, 0, 0, 0, 1, 1}, // 0 Puncak [0][0]
+            {1, 1, 0, 2, 1, 0, 2, 1, 1, 1}, // 1 P4[1][3], P3[1][6] 
+            {1, 0, 0, 1, 1, 1, 0, 1, 1, 1}, // 2
+            {2, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // 3 Tanjakan Cinta [3][0]
+            {1, 1, 0, 1, 1, 0, 2, 0, 0, 0}, // 4 P2[4][6]
+            {1, 1, 0, 1, 0, 0, 1, 1, 1, 1}, // 5 P1 [5][9]
+        };
+        
+        Scanner input = new Scanner(System.in);
+        System.out.print("Masukkan Tenaga: ");
+        int energi = input.nextInt();
+        input.nextLine(); // buang enter
+        System.out.print("Masukkan Jalur: ");
+        String jalur = input.nextLine().toUpperCase();
+        
+        // Posisi awal P1 = baris 5, kolom 9
+        int baris = 5, kolom = 9;
+        boolean sampaiPuncak = false;
+        boolean masukJurang = false;
+        
+        for (int i = 0; i < jalur.length(); i++) {
+            char aksi = jalur.charAt(i);
+            
+            // 1. Cek istirahat dulu
+            if (aksi == 'I') {
+                if (peta[baris][kolom] == 2) { // Cek apakah di Pos
+                    energi += 10;
+                } else {
+                    System.out.println("Mohon maaf, istirahat hanya diperbolehkan di Pos-pos yang tersedia");
+                    return;
+                }
+                continue;
+            }
+            
+            // 2. Hitung posisi baru
+            int barisBaru = baris, kolomBaru = kolom;
+            switch (aksi) {
+                case 'L': kolomBaru--; break;
+                case 'R': kolomBaru++; break;
+                case 'U': barisBaru--; break;
+                case 'D': barisBaru++; break;
+                default: continue;
+            }
+            
+            // 3. Cek keluar peta atau jurang
+            if (barisBaru < 0 || barisBaru >= 6 || kolomBaru < 0 || kolomBaru >= 10 || peta[barisBaru][kolomBaru] == 0) {
+                System.out.println("Jalur anda salah, anda masuk ke jurang/blank 45");
+                masukJurang = true;
+                break;
+            }
+            
+            // 4. Update posisi & kurangi energi
+            baris = barisBaru;
+            kolom = kolomBaru;
+            energi--;
+            
+            // 5. Cek sampai puncak
+            if (baris == 0 && kolom == 0) {
+                sampaiPuncak = true;
+                break;
+            }
+            
+            // 6. Cek tenaga habis
+            if (energi <= 0 &&!sampaiPuncak) {
+                System.out.println("Jalur anda benar, tapi tenaga anda tidak akan kuat, coba jalur lain atau sempatkan istirahat terlebih dahulu");
+                return;
+            }
+        }
+        
+        // Output akhir
+        if (sampaiPuncak &&!masukJurang) {
+            System.out.println("Selamat Pendakian anda berhasil mencapai Puncak Mahameru, sisa tenaga anda " + energi);
+        } else if (!masukJurang && energi > 0) {
+             System.out.println("Jalur anda benar, tapi tenaga anda tidak akan kuat, coba jalur lain atau sempatkan istirahat terlebih dahulu");
+        }
+        
+        input.close();
+    }
+}
